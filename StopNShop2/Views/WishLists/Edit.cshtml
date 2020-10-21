@@ -1,4 +1,4 @@
-﻿@model StopNShop2.Models.ProductReview
+﻿@model StopNShop2.Models.WishList
 
 @{
     ViewData["Title"] = "Edit";
@@ -7,18 +7,13 @@
 
 <h1>Edit</h1>
 
-<h4>ProductReview</h4>
+<h4>WishList</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProductReviewID" />
-            <div class="form-group">
-                <label asp-for="ReviewDetail" class="control-label"></label>
-                <input asp-for="ReviewDetail" class="form-control" />
-                <span asp-validation-for="ReviewDetail" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="WishListID" />
             <div class="form-group">
                 <label asp-for="ProductFK" class="control-label"></label>
                 <select asp-for="ProductFK" class="form-control" asp-items="ViewBag.ProductFK"></select>

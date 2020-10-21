@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -21,14 +20,13 @@ namespace StopNShop2.Controllers
         }
 
         // GET: ProductReviews
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ProductReview.ToListAsync());
+            var applicationDbContext = _context.ProductReview.Include(p => p.Product);
+            return View(await applicationDbContext.ToListAsync());
         }
 
         // GET: ProductReviews/Details/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,6 +35,7 @@ namespace StopNShop2.Controllers
             }
 
             var productReview = await _context.ProductReview
+                .Include(p => p.Product)
                 .FirstOrDefaultAsync(m => m.ProductReviewID == id);
             if (productReview == null)
             {
@@ -47,9 +46,9 @@ namespace StopNShop2.Controllers
         }
 
         // GET: ProductReviews/Create
-        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
+            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId");
             return View();
         }
 
@@ -58,8 +57,7 @@ namespace StopNShop2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("ProductReviewID,ReviewDetail")] ProductReview productReview)
+        public async Task<IActionResult> Create([Bind("ProductReviewID,ReviewDetail,ProductFK")] ProductReview productReview)
         {
             if (ModelState.IsValid)
             {
@@ -67,11 +65,11 @@ namespace StopNShop2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId", productReview.ProductFK);
             return View(productReview);
         }
 
         // GET: ProductReviews/Edit/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -84,6 +82,7 @@ namespace StopNShop2.Controllers
             {
                 return NotFound();
             }
+            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId", productReview.ProductFK);
             return View(productReview);
         }
 
@@ -92,8 +91,7 @@ namespace StopNShop2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductReviewID,ReviewDetail")] ProductReview productReview)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductReviewID,ReviewDetail,ProductFK")] ProductReview productReview)
         {
             if (id != productReview.ProductReviewID)
             {
@@ -120,11 +118,11 @@ namespace StopNShop2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId", productReview.ProductFK);
             return View(productReview);
         }
 
         // GET: ProductReviews/Delete/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -133,6 +131,7 @@ namespace StopNShop2.Controllers
             }
 
             var productReview = await _context.ProductReview
+                .Include(p => p.Product)
                 .FirstOrDefaultAsync(m => m.ProductReviewID == id);
             if (productReview == null)
             {
@@ -145,7 +144,6 @@ namespace StopNShop2.Controllers
         // POST: ProductReviews/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var productReview = await _context.ProductReview.FindAsync(id);

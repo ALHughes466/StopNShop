@@ -15,5 +15,7 @@ namespace StopNShop2.Models
         public virtual ApplicationUser ApplicationUser { get; set; }
 
         public virtual Product Product { get; set; }
+        [ForeignKey("Product")]
+        public int ProductFK { get; set; }
     }
 }

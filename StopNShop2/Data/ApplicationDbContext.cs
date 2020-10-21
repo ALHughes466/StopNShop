@@ -23,5 +23,6 @@ namespace StopNShop2.Data
         public DbSet<StopNShop2.Models.Product> Product { get; set; }
         public DbSet<StopNShop2.Models.ProductReview> ProductReview { get; set; }
         public DbSet<StopNShop2.Models.ShoppingCart> ShoppingCart { get; set; }
+        public DbSet<StopNShop2.Models.WishList> WishList { get; set; }
     }
 }

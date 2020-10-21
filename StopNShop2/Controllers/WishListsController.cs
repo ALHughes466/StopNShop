@@ -10,23 +10,23 @@ using StopNShop2.Models;
 
 namespace StopNShop2.Controllers
 {
-    public class ShoppingCartsController : Controller
+    public class WishListsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ShoppingCartsController(ApplicationDbContext context)
+        public WishListsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: ShoppingCarts
+        // GET: WishLists
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ShoppingCart.Include(s => s.Product);
+            var applicationDbContext = _context.WishList.Include(w => w.Product);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: ShoppingCarts/Details/5
+        // GET: WishLists/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,42 +34,42 @@ namespace StopNShop2.Controllers
                 return NotFound();
             }
 
-            var shoppingCart = await _context.ShoppingCart
-                .Include(s => s.Product)
-                .FirstOrDefaultAsync(m => m.ShoppingCartID == id);
-            if (shoppingCart == null)
+            var wishList = await _context.WishList
+                .Include(w => w.Product)
+                .FirstOrDefaultAsync(m => m.WishListID == id);
+            if (wishList == null)
             {
                 return NotFound();
             }
 
-            return View(shoppingCart);
+            return View(wishList);
         }
 
-        // GET: ShoppingCarts/Create
+        // GET: WishLists/Create
         public IActionResult Create()
         {
             ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId");
             return View();
         }
 
-        // POST: ShoppingCarts/Create
+        // POST: WishLists/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ShoppingCartID,Quantity,ProductFK")] ShoppingCart shoppingCart)
+        public async Task<IActionResult> Create([Bind("WishListID,ProductFK")] WishList wishList)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(shoppingCart);
+                _context.Add(wishList);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId", shoppingCart.ProductFK);
-            return View(shoppingCart);
+            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId", wishList.ProductFK);
+            return View(wishList);
         }
 
-        // GET: ShoppingCarts/Edit/5
+        // GET: WishLists/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,23 +77,23 @@ namespace StopNShop2.Controllers
                 return NotFound();
             }
 
-            var shoppingCart = await _context.ShoppingCart.FindAsync(id);
-            if (shoppingCart == null)
+            var wishList = await _context.WishList.FindAsync(id);
+            if (wishList == null)
             {
                 return NotFound();
             }
-            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId", shoppingCart.ProductFK);
-            return View(shoppingCart);
+            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId", wishList.ProductFK);
+            return View(wishList);
         }
 
-        // POST: ShoppingCarts/Edit/5
+        // POST: WishLists/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ShoppingCartID,Quantity,ProductFK")] ShoppingCart shoppingCart)
+        public async Task<IActionResult> Edit(int id, [Bind("WishListID,ProductFK")] WishList wishList)
         {
-            if (id != shoppingCart.ShoppingCartID)
+            if (id != wishList.WishListID)
             {
                 return NotFound();
             }
@@ -102,12 +102,12 @@ namespace StopNShop2.Controllers
             {
                 try
                 {
-                    _context.Update(shoppingCart);
+                    _context.Update(wishList);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ShoppingCartExists(shoppingCart.ShoppingCartID))
+                    if (!WishListExists(wishList.WishListID))
                     {
                         return NotFound();
                     }
@@ -118,11 +118,11 @@ namespace StopNShop2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId", shoppingCart.ProductFK);
-            return View(shoppingCart);
+            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId", wishList.ProductFK);
+            return View(wishList);
         }
 
-        // GET: ShoppingCarts/Delete/5
+        // GET: WishLists/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,31 +130,31 @@ namespace StopNShop2.Controllers
                 return NotFound();
             }
 
-            var shoppingCart = await _context.ShoppingCart
-                .Include(s => s.Product)
-                .FirstOrDefaultAsync(m => m.ShoppingCartID == id);
-            if (shoppingCart == null)
+            var wishList = await _context.WishList
+                .Include(w => w.Product)
+                .FirstOrDefaultAsync(m => m.WishListID == id);
+            if (wishList == null)
             {
                 return NotFound();
             }
 
-            return View(shoppingCart);
+            return View(wishList);
         }
 
-        // POST: ShoppingCarts/Delete/5
+        // POST: WishLists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var shoppingCart = await _context.ShoppingCart.FindAsync(id);
-            _context.ShoppingCart.Remove(shoppingCart);
+            var wishList = await _context.WishList.FindAsync(id);
+            _context.WishList.Remove(wishList);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ShoppingCartExists(int id)
+        private bool WishListExists(int id)
         {
-            return _context.ShoppingCart.Any(e => e.ShoppingCartID == id);
+            return _context.WishList.Any(e => e.WishListID == id);
         }
     }
 }
