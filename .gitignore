@@ -1,0 +1,4 @@
+# Don't track these folders
+**/StopNShop2/obj/**
+**/StopNShop2/bin/**
+.vs/**
