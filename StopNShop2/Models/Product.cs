@@ -16,12 +16,15 @@ namespace StopNShop2.Models
 
         public decimal Price { get; set; }
 
+        [Display(Name = "Previous Price")]
         public decimal PreviousPrice { get; set; }
 
         public int Rating { get; set; }
 
+        [Display(Name = "Image")]
         public string ImagePath { get; set; }
 
+        [Display(Name = "Free Shipping")]
         public bool FreeShipping { get; set; }
 
         //Foreign Keys
