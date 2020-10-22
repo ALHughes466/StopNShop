@@ -19,3 +19,4 @@ namespace StopNShop2.Models
         public int ProductFK { get; set; }
     }
 }
+ 
