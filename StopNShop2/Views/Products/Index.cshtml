@@ -25,6 +25,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
@@ -36,9 +39,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Rating)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
-            </th>
+
             <th>
                 @Html.DisplayNameFor(model => model.FreeShipping)
             </th>
@@ -51,41 +52,44 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PreviousPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rating)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ImagePath)
-                </td>
-                <td>
-                    @if (item.FreeShipping)
-                    {
-                        <img src = "C:\Users\gilli\Documents\GitHub\StopNShop\StopNShop2\Images\freeshippingtruck.png" alt = "Unavailable" height = "50" width = "50">
-                    }
-                    @*@Html.DisplayFor(modelItem => item.FreeShipping)*@
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
-                </td>
-                @if (User.IsInRole("Admin"))
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagePath)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreviousPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @if (item.FreeShipping)
                 {
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-                    </td>
+                    <img src="/Images/freeshippingtruck.png" alt="Available" width="50">
                 }
-            </tr>
+                else
+                {
+                    <div class="text-danger">Unavailable</div>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
+            </td>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                </td>
+            }
+        </tr>
         }
     </tbody>
 </table>
