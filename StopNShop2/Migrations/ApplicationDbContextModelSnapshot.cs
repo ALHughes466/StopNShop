@@ -248,6 +248,24 @@ namespace StopNShop2.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("StopNShop2.Models.ImageUpload", b =>
+                {
+                    b.Property<int>("ImageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ImagePath")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("ImageID");
+
+                    b.ToTable("ImageUpload");
+                });
+
             modelBuilder.Entity("StopNShop2.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
@@ -261,8 +279,8 @@ namespace StopNShop2.Migrations
                     b.Property<bool>("FreeShipping")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ImageFK")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("PreviousPrice")
                         .HasColumnType("decimal(18,2)");
@@ -279,6 +297,8 @@ namespace StopNShop2.Migrations
                     b.HasKey("ProductId");
 
                     b.HasIndex("CategoryFK");
+
+                    b.HasIndex("ImageFK");
 
                     b.ToTable("Product");
                 });
@@ -406,6 +426,12 @@ namespace StopNShop2.Migrations
                     b.HasOne("StopNShop2.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("StopNShop2.Models.ImageUpload", "ImageUpload")
+                        .WithMany()
+                        .HasForeignKey("ImageFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

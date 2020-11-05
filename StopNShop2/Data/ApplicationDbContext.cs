@@ -24,5 +24,8 @@ namespace StopNShop2.Data
         public DbSet<StopNShop2.Models.ProductReview> ProductReview { get; set; }
         public DbSet<StopNShop2.Models.ShoppingCart> ShoppingCart { get; set; }
         public DbSet<StopNShop2.Models.WishList> WishList { get; set; }
+        public object FilesOnDatabase { get; internal set; }
+        public object FilesOnFileSystem { get; internal set; }
+        public DbSet<StopNShop2.Models.ImageUpload> ImageUpload { get; set; }
     }
 }

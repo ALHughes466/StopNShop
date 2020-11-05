@@ -13,26 +13,24 @@ using StopNShop2.Models;
 
 namespace StopNShop2.Controllers
 {
-    public class ProductsController : Controller
+    public class ImageUploadsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        public ImageUploadsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Products
+        [Authorize(Roles = "Admin")]
+        // GET: ImageUploads
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Product
-                .Include(p => p.Category)
-                .Include(p => p.ImageUpload);
-            return View(await applicationDbContext.ToListAsync());
+            return View(await _context.ImageUpload.ToListAsync());
         }
 
-        // GET: Products/Details/5
         [Authorize(Roles = "Admin")]
+        // GET: ImageUploads/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -40,58 +38,51 @@ namespace StopNShop2.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
-                .Include(p => p.Category)
-                .Include(p => p.ImageUpload)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
+            var imageUpload = await _context.ImageUpload
+                .FirstOrDefaultAsync(m => m.ImageID == id);
+            if (imageUpload == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(imageUpload);
         }
 
-        // GET: Products/Create
         [Authorize(Roles = "Admin")]
+        // GET: ImageUploads/Create
         public IActionResult Create()
         {
-            ViewData["CategoryFK"] = new SelectList(_context.Category, "CategoryID", "CategoryName");
-            ViewData["ImageFK"] = new SelectList(_context.ImageUpload, "ImageID", "FileName");
             return View();
         }
 
-        // POST: Products/Create
+        // POST: ImageUploads/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Title,Price,PreviousPrice,Rating,ImagePath,FreeShipping,CategoryFK,ImageFK")] Product product)
+        public async Task<IActionResult> Create([Bind("ImageID,ImagePath")] ImageUpload imageUpload)
         {
             if (ModelState.IsValid)
             {
-                // image upload
-                /*if (Request.Form.Files.Count > 0)
+                if (Request.Form.Files.Count > 0)
                 {
                     IFormFile file = Request.Form.Files.FirstOrDefault();
                     using (var dataStream = new MemoryStream())
                     {
                         await file.CopyToAsync(dataStream);
-                        product.ImagePath = dataStream.ToArray();
+                        imageUpload.ImagePath = dataStream.ToArray();
+                        imageUpload.FileName = file.FileName;
                     }
-                }*/
-
-                _context.Add(product);
+                }
+                _context.Add(imageUpload);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryFK"] = new SelectList(_context.Category, "CategoryID", "CategoryName", product.CategoryFK);
-            ViewData["ImageFK"] = new SelectList(_context.ImageUpload, "ImageID", "FileName", product.ImageFK);
-            return View(product);
+            return View(imageUpload);
         }
 
-        // GET: Products/Edit/5
         [Authorize(Roles = "Admin")]
+        // GET: ImageUploads/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -99,40 +90,36 @@ namespace StopNShop2.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product.FindAsync(id);
-            if (product == null)
+            var imageUpload = await _context.ImageUpload.FindAsync(id);
+            if (imageUpload == null)
             {
                 return NotFound();
             }
-            ViewData["CategoryFK"] = new SelectList(_context.Category, "CategoryID", "CategoryName", product.CategoryFK);
-            ViewData["ImageFK"] = new SelectList(_context.ImageUpload, "ImageID", "FileName", product.ImageFK);
-            return View(product);
+            return View(imageUpload);
         }
 
-        // POST: Products/Edit/5
+        // POST: ImageUploads/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Title,Price,PreviousPrice,Rating,FreeShipping,CategoryFK,ImageFK")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ImageID,ImagePath")] ImageUpload imageUpload)
         {
-            if (id != product.ProductId)
+            if (id != imageUpload.ImageID)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                
                 try
                 {
-                    _context.Update(product);
+                    _context.Update(imageUpload);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!ImageUploadExists(imageUpload.ImageID))
                     {
                         return NotFound();
                     }
@@ -143,13 +130,11 @@ namespace StopNShop2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CategoryFK"] = new SelectList(_context.Category, "CategoryID", "CategoryName", product.CategoryFK);
-            ViewData["ImageFK"] = new SelectList(_context.ImageUpload, "ImageID", "FileName", product.ImageFK);
-            return View(product);
+            return View(imageUpload);
         }
 
-        // GET: Products/Delete/5
         [Authorize(Roles = "Admin")]
+        // GET: ImageUploads/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -157,32 +142,31 @@ namespace StopNShop2.Controllers
                 return NotFound();
             }
 
-            var product = await _context.Product
-                .Include(p => p.Category)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
+            var imageUpload = await _context.ImageUpload
+                .FirstOrDefaultAsync(m => m.ImageID == id);
+            if (imageUpload == null)
             {
                 return NotFound();
             }
 
-            return View(product);
+            return View(imageUpload);
         }
 
-        // POST: Products/Delete/5
+
+        // POST: ImageUploads/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
+            var imageUpload = await _context.ImageUpload.FindAsync(id);
+            _context.ImageUpload.Remove(imageUpload);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductExists(int id)
+        private bool ImageUploadExists(int id)
         {
-            return _context.Product.Any(e => e.ProductId == id);
+            return _context.ImageUpload.Any(e => e.ImageID == id);
         }
     }
 }

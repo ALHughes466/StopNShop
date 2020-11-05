@@ -10,14 +10,14 @@ using StopNShop2.Data;
 namespace StopNShop2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201012174425_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20201031232047_New Initial")]
+    partial class NewInitial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -250,6 +250,24 @@ namespace StopNShop2.Migrations
                     b.ToTable("Category");
                 });
 
+            modelBuilder.Entity("StopNShop2.Models.ImageUpload", b =>
+                {
+                    b.Property<int>("ImageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("ImagePath")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("ImageID");
+
+                    b.ToTable("ImageUpload");
+                });
+
             modelBuilder.Entity("StopNShop2.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
@@ -263,8 +281,8 @@ namespace StopNShop2.Migrations
                     b.Property<bool>("FreeShipping")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ImagePath")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ImageFK")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("PreviousPrice")
                         .HasColumnType("decimal(18,2)");
@@ -282,6 +300,8 @@ namespace StopNShop2.Migrations
 
                     b.HasIndex("CategoryFK");
 
+                    b.HasIndex("ImageFK");
+
                     b.ToTable("Product");
                 });
 
@@ -292,7 +312,7 @@ namespace StopNShop2.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductFK")
                         .HasColumnType("int");
 
                     b.Property<string>("ReviewDetail")
@@ -300,7 +320,7 @@ namespace StopNShop2.Migrations
 
                     b.HasKey("ProductReviewID");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductFK");
 
                     b.ToTable("ProductReview");
                 });
@@ -315,7 +335,7 @@ namespace StopNShop2.Migrations
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ProductId")
+                    b.Property<int>("ProductFK")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -325,9 +345,31 @@ namespace StopNShop2.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
-                    b.HasIndex("ProductId");
+                    b.HasIndex("ProductFK");
 
                     b.ToTable("ShoppingCart");
+                });
+
+            modelBuilder.Entity("StopNShop2.Models.WishList", b =>
+                {
+                    b.Property<int>("WishListID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProductFK")
+                        .HasColumnType("int");
+
+                    b.HasKey("WishListID");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ProductFK");
+
+                    b.ToTable("WishList");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -388,13 +430,21 @@ namespace StopNShop2.Migrations
                         .HasForeignKey("CategoryFK")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("StopNShop2.Models.ImageUpload", "ImageUpload")
+                        .WithMany()
+                        .HasForeignKey("ImageFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StopNShop2.Models.ProductReview", b =>
                 {
                     b.HasOne("StopNShop2.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("StopNShop2.Models.ShoppingCart", b =>
@@ -405,7 +455,22 @@ namespace StopNShop2.Migrations
 
                     b.HasOne("StopNShop2.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StopNShop2.Models.WishList", b =>
+                {
+                    b.HasOne("StopNShop2.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("StopNShop2.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductFK")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

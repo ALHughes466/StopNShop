@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StopNShop2.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class NewInitial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -63,6 +63,20 @@ namespace StopNShop2.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Category", x => x.CategoryID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ImageUpload",
+                columns: table => new
+                {
+                    ImageID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ImagePath = table.Column<byte[]>(nullable: true),
+                    FileName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ImageUpload", x => x.ImageID);
                 });
 
             migrationBuilder.CreateTable(
@@ -181,9 +195,9 @@ namespace StopNShop2.Migrations
                     Price = table.Column<decimal>(nullable: false),
                     PreviousPrice = table.Column<decimal>(nullable: false),
                     Rating = table.Column<int>(nullable: false),
-                    ImagePath = table.Column<string>(nullable: true),
                     FreeShipping = table.Column<bool>(nullable: false),
-                    CategoryFK = table.Column<int>(nullable: false)
+                    CategoryFK = table.Column<int>(nullable: false),
+                    ImageFK = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,6 +208,12 @@ namespace StopNShop2.Migrations
                         principalTable: "Category",
                         principalColumn: "CategoryID",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Product_ImageUpload_ImageFK",
+                        column: x => x.ImageFK,
+                        principalTable: "ImageUpload",
+                        principalColumn: "ImageID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -202,18 +222,18 @@ namespace StopNShop2.Migrations
                 {
                     ProductReviewID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(nullable: true),
-                    ReviewDetail = table.Column<string>(nullable: true)
+                    ReviewDetail = table.Column<string>(nullable: true),
+                    ProductFK = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductReview", x => x.ProductReviewID);
                     table.ForeignKey(
-                        name: "FK_ProductReview_Product_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_ProductReview_Product_ProductFK",
+                        column: x => x.ProductFK,
                         principalTable: "Product",
                         principalColumn: "ProductId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -224,7 +244,7 @@ namespace StopNShop2.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(nullable: false),
                     ApplicationUserId = table.Column<string>(nullable: true),
-                    ProductId = table.Column<int>(nullable: true)
+                    ProductFK = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -236,11 +256,37 @@ namespace StopNShop2.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ShoppingCart_Product_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_ShoppingCart_Product_ProductFK",
+                        column: x => x.ProductFK,
                         principalTable: "Product",
                         principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WishList",
+                columns: table => new
+                {
+                    WishListID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApplicationUserId = table.Column<string>(nullable: true),
+                    ProductFK = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WishList", x => x.WishListID);
+                    table.ForeignKey(
+                        name: "FK_WishList_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_WishList_Product_ProductFK",
+                        column: x => x.ProductFK,
+                        principalTable: "Product",
+                        principalColumn: "ProductId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -288,9 +334,14 @@ namespace StopNShop2.Migrations
                 column: "CategoryFK");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductReview_ProductId",
+                name: "IX_Product_ImageFK",
+                table: "Product",
+                column: "ImageFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductReview_ProductFK",
                 table: "ProductReview",
-                column: "ProductId");
+                column: "ProductFK");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShoppingCart_ApplicationUserId",
@@ -298,9 +349,19 @@ namespace StopNShop2.Migrations
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShoppingCart_ProductId",
+                name: "IX_ShoppingCart_ProductFK",
                 table: "ShoppingCart",
-                column: "ProductId");
+                column: "ProductFK");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WishList_ApplicationUserId",
+                table: "WishList",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WishList_ProductFK",
+                table: "WishList",
+                column: "ProductFK");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -327,6 +388,9 @@ namespace StopNShop2.Migrations
                 name: "ShoppingCart");
 
             migrationBuilder.DropTable(
+                name: "WishList");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -337,6 +401,9 @@ namespace StopNShop2.Migrations
 
             migrationBuilder.DropTable(
                 name: "Category");
+
+            migrationBuilder.DropTable(
+                name: "ImageUpload");
         }
     }
 }

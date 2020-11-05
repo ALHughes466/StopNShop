@@ -1,0 +1,40 @@
+﻿@model IEnumerable<StopNShop2.Models.ImageUpload>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Upload Image</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <img id="prodImg" style="width:150px; object-fit:cover" src="data:image/*;base64,@(Convert.ToBase64String(item.ImagePath))">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FileName)
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@item.ImageID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

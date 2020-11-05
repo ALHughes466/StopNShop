@@ -2,7 +2,7 @@
   "dependencies": {
     "mssql1": {
       "restored": true,
-      "restoreTime": "2020-10-12T20:34:32.5517513Z"
+      "restoreTime": "2020-11-02T21:38:33.034109Z"
     }
   },
   "parameters": {
@@ -12,7 +12,7 @@
     },
     "mssql1.resourceGroupName": {
       "Type": "resourceGroup",
-      "Value": "StopNShop"
+      "Value": "StopNShopResourceGroup"
     }
   }
 }
