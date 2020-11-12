@@ -14,7 +14,14 @@
     PreviousPrice should only display if Price < PreviousPrice, indicating a sale
     ImagePath not implemented, admin has no way to upload an image currently.
 -->
-
+<form asp-action="Index" method="get">
+    <div>
+        <p>
+            Search Products: <input type="text" name="searchString" value=""/>
+            <a asp-action="Index">Remove Filter</a>
+        </p>
+    </div>
+</form>
 @if (User.IsInRole("Admin"))
 {
 <p>

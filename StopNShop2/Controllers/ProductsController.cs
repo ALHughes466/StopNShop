@@ -23,12 +23,16 @@ namespace StopNShop2.Controllers
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var applicationDbContext = _context.Product
-                .Include(p => p.Category)
-                .Include(p => p.ImageUpload);
-            return View(await applicationDbContext.ToListAsync());
+            var Product = from p in _context.Product.Include(p => p.Category)
+                .Include(p => p.ImageUpload) select p;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                Product = Product.Where(p => p.Title.Contains(searchString));
+            }
+            return View(await Product.ToListAsync());
         }
 
         // GET: Products/Details/5

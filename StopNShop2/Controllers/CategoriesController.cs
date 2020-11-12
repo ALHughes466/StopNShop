@@ -22,8 +22,15 @@ namespace StopNShop2.Controllers
 
         // GET: Categories
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
+            var Category = from p in _context.Category.Include(p => p.Product) select p;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                Category = Category.Where(p => p.CategoryName.Contains(searchString));
+            }
+
             return View(await _context.Category.ToListAsync());
         }
 
@@ -36,7 +43,7 @@ namespace StopNShop2.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category
+            var category = await _context.Category.Include(p => p.Product)
                 .FirstOrDefaultAsync(m => m.CategoryID == id);
             if (category == null)
             {

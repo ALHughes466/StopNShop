@@ -22,3 +22,43 @@
     <a asp-action="Edit" asp-route-id="@Model.CategoryID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<h4>Products</h4>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                PreviousPrice
+            </th>
+            <th>
+                FreeShipping
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Product)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PreviousPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FreeShipping)
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
