@@ -19,11 +19,14 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.CategoryID">Edit</a> |
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.CategoryID">Edit</a> 
+    }
     <a asp-action="Index">Back to List</a>
 </div>
 
-<h4>Products</h4>
+@*<h4>Products</h4>
 
 <table class="table">
     <thead>
@@ -61,4 +64,4 @@
         </tr>
         }
     </tbody>
-</table>
+</table>*@
