@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ namespace StopNShop2.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "User,Admin")]
         // GET: ShoppingCarts
         public async Task<IActionResult> Index()
         {
@@ -45,10 +47,12 @@ namespace StopNShop2.Controllers
             return View(shoppingCart);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: ShoppingCarts/Create
         public IActionResult Create()
         {
-            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "ProductId");
+            ViewData["ProductFK"] = new SelectList(_context.Product, "ProductId", "Title");
+            ViewData["UserFK"] = new SelectList(_context.ApplicationUser, "ProductId", "Title");
             return View();
         }
 
@@ -57,7 +61,7 @@ namespace StopNShop2.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ShoppingCartID,Quantity,ProductFK")] ShoppingCart shoppingCart)
+        public async Task<IActionResult> Create([Bind("ShoppingCartID,Quantity,Submitted,UserFK,ProductFK")] ShoppingCart shoppingCart)
         {
             if (ModelState.IsValid)
             {
@@ -69,6 +73,7 @@ namespace StopNShop2.Controllers
             return View(shoppingCart);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: ShoppingCarts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -86,12 +91,13 @@ namespace StopNShop2.Controllers
             return View(shoppingCart);
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: ShoppingCarts/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ShoppingCartID,Quantity,ProductFK")] ShoppingCart shoppingCart)
+        public async Task<IActionResult> Edit(int id, [Bind("ShoppingCartID,Quantity,Submitted,UserFK,ProductFK")] ShoppingCart shoppingCart)
         {
             if (id != shoppingCart.ShoppingCartID)
             {
@@ -122,6 +128,7 @@ namespace StopNShop2.Controllers
             return View(shoppingCart);
         }
 
+        [Authorize(Roles = "Admin")]
         // GET: ShoppingCarts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -141,6 +148,7 @@ namespace StopNShop2.Controllers
             return View(shoppingCart);
         }
 
+        [Authorize(Roles = "Admin")]
         // POST: ShoppingCarts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]

@@ -339,6 +339,12 @@ namespace StopNShop2.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<bool>("Submitted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserFK")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("ShoppingCartID");
 
                     b.HasIndex("ApplicationUserId");

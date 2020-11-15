@@ -12,7 +12,11 @@ namespace StopNShop2.Models
 
         public int Quantity { get; set; }
 
+        public bool Submitted { get; set; } = false;
+
         public virtual ApplicationUser ApplicationUser { get; set; }
+        [ForeignKey("User")]
+        public string UserFK { get; set; }
 
         public virtual Product Product { get; set; }
         [ForeignKey("Product")]

@@ -14,9 +14,5 @@ namespace StopNShop2.Models
 
         [Display(Name = "Category Name")]
         public string CategoryName { get; set; }
-
-        public virtual Product Product { get; set; }
-        [ForeignKey("Product")]
-        public int ProductFK { get; set; }
     }
 }

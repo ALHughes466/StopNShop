@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace StopNShop2.Migrations
 {
-    public partial class NewInitial : Migration
+    public partial class cart : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -243,7 +243,9 @@ namespace StopNShop2.Migrations
                     ShoppingCartID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(nullable: false),
+                    Submitted = table.Column<bool>(nullable: false),
                     ApplicationUserId = table.Column<string>(nullable: true),
+                    UserFK = table.Column<string>(nullable: true),
                     ProductFK = table.Column<int>(nullable: false)
                 },
                 constraints: table =>

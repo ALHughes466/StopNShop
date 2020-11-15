@@ -24,7 +24,7 @@ namespace StopNShop2.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(string searchString)
         {
-            var Category = from p in _context.Category.Include(p => p.Product) select p;
+            var Category = from p in _context.Category select p;
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -35,7 +35,6 @@ namespace StopNShop2.Controllers
         }
 
         // GET: Categories/Details/5
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,7 +42,7 @@ namespace StopNShop2.Controllers
                 return NotFound();
             }
 
-            var category = await _context.Category.Include(p => p.Product)
+            var category = await _context.Category
                 .FirstOrDefaultAsync(m => m.CategoryID == id);
             if (category == null)
             {

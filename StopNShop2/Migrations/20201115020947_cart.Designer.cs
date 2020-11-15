@@ -10,8 +10,8 @@ using StopNShop2.Data;
 namespace StopNShop2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201031232047_New Initial")]
-    partial class NewInitial
+    [Migration("20201115020947_cart")]
+    partial class cart
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -340,6 +340,12 @@ namespace StopNShop2.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Submitted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserFK")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ShoppingCartID");
 
