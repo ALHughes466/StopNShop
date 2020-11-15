@@ -92,11 +92,11 @@
                 <td>
                     @if (User.IsInRole("Admin"))
                     {
-                        <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> 
-                        <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> 
+                        <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.ProductId">Details</a>
                         <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
                     }
-                    <a href="@Url.Action("Buy", "Cart", new { id = item.ProductId })">Buy</a>
+                    <a asp-action="Cart" asp-route-id="@item.ProductId">Buy</a>
                 </td>
             
         </tr>

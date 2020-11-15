@@ -30,7 +30,6 @@
 
   <ItemGroup>
     <Folder Include="bin\Debug\" />
-    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
 
   <ItemGroup>

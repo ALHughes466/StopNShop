@@ -74,6 +74,10 @@ namespace StopNShop2.Controllers
                         imageUpload.FileName = file.FileName;
                     }
                 }
+                else
+                {
+                    return RedirectToAction(nameof(Index));
+                }
                 _context.Add(imageUpload);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

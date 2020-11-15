@@ -1,0 +1,141 @@
+﻿@model StopNShop2.Models.Product
+
+@{
+    ViewData["Title"] = "Purchase";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Purchase</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <table class="table-borderless">
+            <tr>
+                <td>
+                    <div class="font-weight-bold">Item</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => model.Title)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="font-weight-bold">Price</div>
+                </td>
+            </tr>
+            @if (Model.Price < Model.PreviousPrice)
+            {
+                <tr>
+                    <td>
+                        <div class="text-danger">
+                            <s>
+                                $@Html.DisplayFor(model => model.PreviousPrice)
+                            </s>
+                        </div>
+                    </td>
+                    <td>
+                        @{
+                            decimal price = Model.Price;
+                            decimal previousPrice = Model.PreviousPrice;
+                            int discount = (int)(((previousPrice - price) / previousPrice) * 100);
+                            string discString = discount.ToString();
+                        }
+                        <div class="text-success font-weight-bold">
+                            @discString% off!
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        $@Html.DisplayFor(model => model.Price)
+                    </td>
+
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        $@Html.DisplayFor(model => model.PreviousPrice)
+                    </td>
+                </tr>
+
+            }
+
+            <tr>
+                <td>
+                    <div class="font-weight-bold">Shipping</div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if (Model.FreeShipping)
+                    {
+                        <img src="~/Images/freeshippingtruck.png" alt="Available" width="50" runat="server">
+                        <div class="text-success">Free 2 day shipping!</div>
+                    }
+                    else
+                    {
+                        <div>$9.99</div>
+                        <div class="text-danger">2-3 Weeks</div>
+                    }
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="col-md-6 col-md-offset-2">
+        <form asp-action="Cart">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                Card Number
+                <input class="form-control" />
+            </div>
+            <div class="form-group">
+                Cardholder's Name
+                <input class="form-control" />
+            </div>
+            <div class="form-group">
+                CVV
+                <input class="form-control" />
+            </div>
+            <div class="form-group">
+                Phone Number
+                <input class="form-control" />
+            </div>
+            <div class="form-group">
+                Billing Address
+                <input class="form-control" />
+            </div>
+            <div class="form-group">
+                Shipping Address
+                <input class="form-control" />
+            </div>
+            <div class="form-group">
+                Email Address
+                <input class="form-control" />
+            </div>
+            <div class="form-group">
+                <span class="font-weight-bold">Total:</span>
+                <span>
+                    $
+                    @if (Model.FreeShipping)
+                    {
+                        @Model.Price
+                    }
+                    else
+                    {
+                        decimal Ship = (decimal)9.99;
+                        decimal withShip = Model.Price + Ship;
+                        @withShip
+                    }
+                </span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Purchase" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

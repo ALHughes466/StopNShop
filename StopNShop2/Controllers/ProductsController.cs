@@ -196,6 +196,32 @@ namespace StopNShop2.Controllers
 
         }*/
 
+        [Authorize(Roles = "Admin, User")]
+        public async Task<IActionResult> Cart(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _context.Product.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            ViewData["CategoryFK"] = new SelectList(_context.Category, "CategoryID", "CategoryName", product.CategoryFK);
+            ViewData["ImageFK"] = new SelectList(_context.ImageUpload, "ImageID", "FileName", product.ImageFK);
+            return View(product);
+        }
+
+        [Authorize(Roles = "Admin, User")]
+        [HttpPost, ActionName("Cart")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cart()
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
