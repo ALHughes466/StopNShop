@@ -217,12 +217,12 @@ namespace StopNShop2.Controllers
         [Authorize(Roles = "Admin, User")]
         [HttpPost, ActionName("Cart")]
         [ValidateAntiForgeryToken]
-        public Task<IActionResult> Cart()
+        public async Task<IActionResult> Cart()
         {
             return RedirectToAction(nameof(Thanks));
         }
 
-        public Task<IActionResult> Thanks()
+        public async Task<IActionResult> Thanks()
         {
             return View();
         }
