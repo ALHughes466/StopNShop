@@ -13,6 +13,7 @@ namespace StopNShop2.Models
         public int CategoryID { get; set; }
 
         [Display(Name = "Category Name")]
+        [Required]
         public string CategoryName { get; set; }
     }
 }
