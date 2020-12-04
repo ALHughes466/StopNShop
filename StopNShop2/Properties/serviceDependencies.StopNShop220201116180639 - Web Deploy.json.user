@@ -2,17 +2,17 @@
   "dependencies": {
     "mssql1": {
       "restored": true,
-      "restoreTime": "2020-11-02T21:38:33.034109Z"
+      "restoreTime": "2020-11-16T23:08:34.6791417Z"
     }
   },
   "parameters": {
     "mssql1.subscriptionId": {
       "Type": "subscription",
-      "Value": "266a6593-5c8b-4fd9-a078-a1f2151e8036"
+      "Value": "1407caae-d48e-4436-bfe8-5cd914a019da"
     },
     "mssql1.resourceGroupName": {
       "Type": "resourceGroup",
-      "Value": "StopNShopResourceGroup"
+      "Value": "StopNShopGroup"
     }
   }
 }

@@ -42,6 +42,7 @@ namespace StopNShop2.Areas.Identity.Pages.Account.Manage
 
             [Phone]
             [Display(Name = "Phone number")]
+            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "Not a valid phone number")]
             public string PhoneNumber { get; set; }
         }
 
